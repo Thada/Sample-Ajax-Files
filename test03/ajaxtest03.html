@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<meta charset="utf-8">
+<head>
+<script language="javascript" type="text/javascript">//Browser Support Code
+function ajaxFunction(url){
+	var xmlhttp;
+    var table,currentRow,numOfEntries;
+	try{
+		//Opera 8.0+, Firefox, Safari
+		xmlhttp = new XMLHttpRequest();
+   	}catch (e){
+		//Internet Explorer Browsers
+		try{
+			xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+    	}catch (e) {
+			//Older browsers
+			try{
+				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}catch (e){
+				// Something went wrong
+				alert("Your browser broke!");
+				return false;
+       		}
+		}
+   	}
+	
+   	xmlhttp.onreadystatechange = function() 
+	{
+	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	{
+	table="<table border='1'><tr><th>Title</th><th>Artist</th><th>Year</th></tr>";
+	numOfEntries=xmlhttp.responseXML.documentElement.getElementsByTagName("CD");
+	for (i=0;i<numOfEntries.length;i++)
+		{
+		table=table + "<tr>";
+		currentRow=numOfEntries[i].getElementsByTagName("TITLE");
+		table=table + "<td>" + currentRow[0].firstChild.nodeValue + "</td>";
+		currentRow=numOfEntries[i].getElementsByTagName("ARTIST");
+		table=table + "<td>" + currentRow[0].firstChild.nodeValue + "</td>";
+		currentRow=numOfEntries[i].getElementsByTagName("YEAR");
+		table=table + "<td>" + currentRow[0].firstChild.nodeValue + "</td>";
+		table=table + "</tr>";
+		}
+	table=table + "</table>";
+	document.getElementById('txtCDInfo').innerHTML=table;
+	}
+	}
+	xmlhttp.open("GET",url,true);
+	xmlhttp.send();
+}
+    
+</script>
+</head>
+
+<body>
+
+<div id="txtCDInfo">
+<button onclick="ajaxFunction('cd_catalog.xml')">Get CD info</button>
+</div>
+
+</body>
+</html>
